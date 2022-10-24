@@ -43,9 +43,15 @@ async def on_message(message):
         count = 0
 
 
-
-        if list[6] == ",": #if the seventh character in the message is a comma, remove it  from the list(makes sure it supports messages with and without commas)
-            list.pop(6)
+        try:
+            if list[6] == ",": #if the seventh character in the message is a comma, remove it  from the list(makes sure it supports messages with and without commas)
+                list.pop(6)
+        except:
+            return #cancels if there's nothing after jarvis
+        try:
+            list[7]
+        except:
+            return # cancels if there's tnohing after the comma
         while list[6] == " ": #gets rid of all spaces leading up to the first character
             list.pop(6)
 
