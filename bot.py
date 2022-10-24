@@ -44,7 +44,7 @@ async def on_message(message):
 
 
 
-        if list[6] == ",": #if the seventh character in the message is a comma, remove it  from the list
+        if list[6] == ",": #if the seventh character in the message is a comma, remove it  from the list(makes sure it supports messages with and without commas)
             list.pop(6)
         while list[6] == " ": #gets rid of all spaces leading up to the first character
             list.pop(6)
