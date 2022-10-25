@@ -5,12 +5,12 @@ bot = commands.Bot(command_prefix="jarvis")
 
 @bot.event
 async def on_ready():
-    print("Bot online")
+    print(f"Bot connected")
 
 @bot.event
 async def on_message(message):
     if message.author == bot.user: # If the message is from a bot and not a human
-        print("bot message received")
+        print("Message author is a bot, ignoring")
         return
     if message.content.lower().startswith('jarvis'): #if it starts with jarvis, the .lower() part makes sure it's not case sensitive
         def ingFrom(s): # Present participle function I copied from https://gist.github.com/arjun921/5f38259ea056fdc35617cb7449fb234e
@@ -70,8 +70,11 @@ async def on_message(message):
 
         firstword = ingFrom(firstword) # attempts to make the first word a present participle
         list = "".join(map(str, list)) # same as line 63
+        if "@everyone" in list or "@here" in list:
+            list = list.replace('@everyone', '`@everyone`')
+            list = list.replace('@here', '`@here`')
 
         final = firstword + list # creates the final text
         await message.channel.send(final.lower()) # send the final message
-        
+
 bot.run('PUT YOUR BOT TOKEN HERE')
