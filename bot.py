@@ -70,9 +70,13 @@ async def on_message(message):
 
         firstword = ingFrom(firstword) # attempts to make the first word a present participle
         list = "".join(map(str, list)) # same as line 63
-        if "@everyone" in list or "@here" in list:
+        replaces = ['@everyone', '@here', 'my', 'i', 'me']
+        if replaces in list: # anti @everyone and @here protection
             list = list.replace('@everyone', '`@everyone`')
             list = list.replace('@here', '`@here`')
+            list = list.replace('i', 'you')
+            list = list.replace('me', 'you')
+            list = list.replace('my', 'your')
 
         final = firstword + list # creates the final text
         await message.channel.send(final.lower()) # send the final message
