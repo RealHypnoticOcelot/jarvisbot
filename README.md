@@ -7,7 +7,7 @@
 Install the requirements using the following command:
 
 ```python
-pip3 install discord.py
+pip3 install git+https://github.com/Rapptz/discord.py
 ```
 
 All the bot does is take the first word and attempt to convert it to its present participle form, and then it repeats what you said.
