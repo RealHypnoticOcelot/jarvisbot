@@ -1,18 +1,21 @@
 from discord.ext import commands
 import discord
+import re
 
-bot = commands.Bot(command_prefix="jarvis")
+intents = discord.Intents.default()
+intents.message_content = True
+bot = commands.Bot(command_prefix="jarvis", intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f"Bot connected")
+    print(f'Bot connected, logged in as {bot.user}, ID {bot.user.id}')
 
 @bot.event
 async def on_message(message):
-    if message.author == bot.user: # If the message is from a bot and not a human
-        print("Message author is a bot, ignoring")
-        return
     if message.content.lower().startswith('jarvis'): #if it starts with jarvis, the .lower() part makes sure it's not case sensitive
+        if message.author == bot.user: # If the message is from a bot and not a human
+            print("Message author is a bot, ignoring")
+            return
         def ingFrom(s): # Present participle function I copied from https://gist.github.com/arjun921/5f38259ea056fdc35617cb7449fb234e
             for x in s:
                 li.append(x)
@@ -70,13 +73,12 @@ async def on_message(message):
 
         firstword = ingFrom(firstword) # attempts to make the first word a present participle
         list = "".join(map(str, list)) # same as line 63
-        replaces = ['@everyone', '@here', 'my', 'i', 'me']
-        if replaces in list: # anti @everyone and @here protection
-            list = list.replace('@everyone', '`@everyone`')
-            list = list.replace('@here', '`@here`')
-            list = list.replace('i', 'you')
-            list = list.replace('me', 'you')
-            list = list.replace('my', 'your')
+        list = list.lower()
+        list = list.replace('@everyone', '`@everyone`')
+        list = list.replace('@here', '`@here`')
+        list = re.sub(r'\bi\b', 'you', list)
+        list = re.sub(r'\bme\b', 'you', list)
+        list = re.sub(r'\bmy\b', 'your', list)
 
         final = firstword + list # creates the final text
         await message.channel.send(final.lower()) # send the final message
