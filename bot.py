@@ -1,6 +1,7 @@
 from discord.ext import commands
 import discord
 import re
+import random
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -71,7 +72,7 @@ async def on_message(message):
             list.pop(0)
         firstword = "".join(map(str, firstword)) # convert ['t', 'h', 'i', 's'] into 'this'
 
-        firstword = ingFrom(firstword) # attempts to make the first word a present participle
+        firstwordfinal = ingFrom(firstword) # attempts to make the first word a present participle
         list = "".join(map(str, list)) # same as line 63
         list = list.lower()
         list = list.replace('@everyone', '`@everyone`')
@@ -80,7 +81,13 @@ async def on_message(message):
         list = re.sub(r'\bme\b', 'you', list)
         list = re.sub(r'\bmy\b', 'your', list)
 
-        final = firstword + list # creates the final text
+         # creates the final text
+        yorn = ["yes", "no"]
+        if firstword.endswith("?") or list.endswith("?"):
+            final = random.choice(yorn)
+        else:
+            final = firstwordfinal + list
+        print(f"Sent \"{final}\" to {message.guild}({message.guild.id})")
         await message.channel.send(final.lower()) # send the final message
 
-bot.run('PUT YOUR BOT TOKEN HERE')
+bot.run('TOKEN')
