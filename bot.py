@@ -10,13 +10,13 @@ bot = commands.Bot(command_prefix="jarvis", intents=intents)
 @bot.event
 async def on_ready():
     print(f'Bot connected, logged in as {bot.user}, ID {bot.user.id}')
+    await bot.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(name="jarvis, send me a pipe bomb"))
 
 @bot.event
 async def on_message(message):
-    if message.content.lower().startswith('jarvis'): #if it starts with jarvis, the .lower() part makes sure it's not case sensitive
-        if message.author == bot.user: # If the message is from a bot and not a human
-            print("Message author is a bot, ignoring")
-            return
+    if message.author == bot.user: # If the message is from a bot and not a human
+        return
+    elif message.content.lower().startswith('jarvis'): #if it starts with jarvis, the .lower() part makes sure it's not case sensitive
         def ingFrom(s): # Present participle function I copied from https://gist.github.com/arjun921/5f38259ea056fdc35617cb7449fb234e
             for x in s:
                 li.append(x)
@@ -55,7 +55,7 @@ async def on_message(message):
         try:
             list[7]
         except:
-            return # cancels if there's tnohing after the comma
+            return # cancels if there's nothing after the comma
         while list[6] == " ": #gets rid of all spaces leading up to the first character
             list.pop(6)
 
@@ -71,8 +71,23 @@ async def on_message(message):
         for i in range(count): # remove the first word from the list
             list.pop(0)
         firstword = "".join(map(str, firstword)) # convert ['t', 'h', 'i', 's'] into 'this'
-
+        mentions = []
+        for i in message.mentions:
+            mentions.append((i.id, i.nick))
+        addtick = 0
+        for i in mentions:
+            if str(i[0]) in firstword:
+                withtags = "<@" + str(i[0]) + ">"
+                newname = "`@" + str(i[1])
+                firstword = firstword.replace(withtags, newname)
+                addtick = 1
+                tickloc = len(firstword)
+                print(firstword)
         firstwordfinal = ingFrom(firstword) # attempts to make the first word a present participle
+        if addtick == 1:
+            firstwordfinal = [*firstwordfinal]
+            firstwordfinal.insert(tickloc, "`")
+            firstwordfinal = "".join(map(str, firstwordfinal))
         list = "".join(map(str, list)) # same as line 63
         list = list.lower()
         list = list.replace('@everyone', '`@everyone`')
@@ -83,11 +98,19 @@ async def on_message(message):
 
          # creates the final text
         yorn = ["yes", "no"]
+        for i in mentions:
+            if str(i[0]) in list:
+                withtags = "<@" + str(i[0]) + ">"
+                newname = "`@" + str(i[1]) + "`"
+                list = list.replace(withtags, newname)
         if firstword.endswith("?") or list.endswith("?"):
             final = random.choice(yorn)
         else:
-            final = firstwordfinal + list
+            if addtick == 1:
+                final = firstwordfinal + list
+            else:
+                final = firstwordfinal.lower() + list
         print(f"Sent \"{final}\" to {message.guild}({message.guild.id})")
-        await message.channel.send(final.lower()) # send the final message
+        await message.channel.send(content=final, reference=message, mention_author=False, allowed_mentions=None) # send the final message
 
 bot.run('TOKEN')
