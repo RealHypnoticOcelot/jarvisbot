@@ -17,4 +17,4 @@ Example:
 ![ban everyone](https://cdn.discordapp.com/attachments/887820100743352413/1034193189684387920/unknown.png)
 
 
-###### If you have any issues, questions or concerns, DM me on discord: HypnoticOcelot#6969 or create an issue
+###### If you have any issues, questions or concerns, [DM me](<https://discord.com/users/404053132910395393>) or create an issue
